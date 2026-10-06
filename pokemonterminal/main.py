@@ -21,6 +21,11 @@ def main(argv=None):
         Filter.filtered_list = [pok for pok in Filter.POKEMON_LIST]
     # TODO Lower main() complexity with factory functions or something
     options = parser.parse_args(argv)  # Parser is imported at top of file.
+
+    if options.recover:
+        scripter.recover()
+        return
+
     try:
         options.id = int(options.id)
     except ValueError:
@@ -75,7 +80,9 @@ def main(argv=None):
     if options.clear:
         if event_exists:
             slideshow.stop(event_name)
-        if not options.wallpaper:
+        if options.wallpaper:
+            scripter.clear_wallpaper()
+        else:
             scripter.clear_terminal()
         return
 
@@ -100,9 +107,9 @@ def main(argv=None):
                     return
                 else:
                     print("Not a valid option!\n")
-        target_func = scripter.change_wallpaper if options.wallpaper else scripter.change_terminal
+        domain = "wallpaper" if options.wallpaper else "terminal"
         print(f"Starting slideshow with {len(Filter.filtered_list)} Pokemons and a delay of {options.slideshow} minutes.")
-        pid = slideshow.start(Filter.filtered_list, options.slideshow, target_func, event_name)
+        pid = slideshow.start(Filter.filtered_list, options.slideshow, domain, event_name)
         print(f"Forked process to background with PID {pid}.")
         print("You can stop it with 'pokemon {}'.".format('-c -w' if options.wallpaper else '-c'))
         return

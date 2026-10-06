@@ -3,6 +3,7 @@ import subprocess
 import sys
 
 from . import TerminalProvider as _TProv
+from ...transaction import AttributeSpec, TargetId
 
 
 class ConEmuProvider(_TProv):
@@ -25,6 +26,19 @@ class ConEmuProvider(_TProv):
 
         # Done after setting background image to avoid the old background flashing if it was disabled.
         ConEmuProvider.__enable_background(True)
+
+    @classmethod
+    def attribute_specs(cls):
+        # ConEmu GuiMacros provide no option getter: the previous image and
+        # enabled flag cannot be recovered.
+        return [AttributeSpec("background-image", readable=False,
+                              writable=True,
+                              description="Background image of the console")]
+
+    @classmethod
+    def list_targets(cls):
+        return [TargetId("conemu-console",
+                         os.environ.get("CONEMUPID", "default"))]
 
     def clear():
         ConEmuProvider.__enable_background(False)

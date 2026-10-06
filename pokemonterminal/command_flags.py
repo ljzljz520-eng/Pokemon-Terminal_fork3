@@ -90,6 +90,11 @@ _misc_group.add_argument(
 _misc_group.add_argument(
     '-v', '--verbose', help='Enables verbose output', action='store_true')
 _misc_group.add_argument(
+    '--recover',
+    help='Restores transactions whose lease expired (crashed or killed '
+    'slideshows), for both terminal and wallpaper, then quits',
+    action='store_true')
+_misc_group.add_argument(
     '-dr',
     '--dry-run',
     help='Implies -v and doesn\'t actually changes either wallpaper '
